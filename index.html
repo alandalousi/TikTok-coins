@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coins Shop</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f0f0f;
+  color:white;
+  display:flex;
+  justify-content:center;
+}
+
+/* CONTAINER */
+.container{
+  width:100%;
+  max-width:500px;
+  padding:15px;
+}
+
+/* DESKTOP */
+@media (min-width:900px){
+  .container{
+    max-width:900px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .payments{
+    display:flex;
+    gap:10px;
+  }
+
+  .pay{
+    flex:1;
+    justify-content:center;
+  }
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.secure{
+  text-align:center;
+  color:#aaa;
+  font-size:14px;
+  margin-bottom:15px;
+}
+
+.username-input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  margin-bottom:15px;
+  background:#1a1a1a;
+  color:white;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.card{
+  background:#1a1a1a;
+  padding:18px;
+  border-radius:14px;
+  text-align:center;
+  cursor:pointer;
+  border:2px solid transparent;
+  transition:0.2s;
+  overflow:hidden;
+}
+
+.card:hover{
+  transform:scale(1.05);
+}
+
+.card.active{
+  border:2px solid #ff2d55;
+}
+
+.price{
+  margin-top:6px;
+  color:#aaa;
+}
+
+/* CUSTOM FIX */
+.custom-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.custom-card input{
+  width:90%;
+  max-width:120px;
+  margin-top:10px;
+  padding:8px;
+  border-radius:8px;
+  border:none;
+  background:#333;
+  color:white;
+  text-align:center;
+  box-sizing:border-box;
+  font-size:14px;
+}
+
+.custom-card input:focus{
+  outline:none;
+  border:1px solid #ff2d55;
+}
+
+/* PAYMENTS */
+.payments{
+  margin-top:25px;
+}
+
+.pay{
+  background:#1a1a1a;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
+  cursor:pointer;
+  border:2px solid transparent;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.pay.active{
+  border:2px solid #ff2d55;
+}
+
+button{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:12px;
+  background:#ff2d55;
+  color:white;
+  font-size:16px;
+  margin-top:20px;
+  cursor:pointer;
+}
+
+/* POPUP */
+.overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.popup{
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:15px;
+  width:90%;
+  max-width:350px;
+}
+
+/* LOADING */
+.loading{
+  display:none;
+  text-align:center;
+  margin-top:100px;
+}
+
+.spinner{
+  border:6px solid #333;
+  border-top:6px solid #ff2d55;
+  border-radius:50%;
+  width:60px;
+  height:60px;
+  animation:spin 1s linear infinite;
+  margin:auto;
+}
+
+@keyframes spin{
+  100%{ transform:rotate(360deg); }
+}
+
+/* SUCCESS */
+.success{
+  display:none;
+  text-align:center;
+  margin-top:100px;
+}
+
+.receipt{
+  background:#1a1a1a;
+  padding:15px;
+  border-radius:12px;
+  margin-top:15px;
+  text-align:left;
+}
+
+/* COINS */
+.coin{
+  position:fixed;
+  top:-50px;
+  font-size:24px;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(100vh) rotate(360deg);
+    opacity:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="main">
+
+<div class="top">
+  <div style="display:flex; align-items:center; gap:8px; font-weight:bold;">
+    <i class="fa-brands fa-tiktok"></i>
+    TikTok Coins
+  </div>
+
+  <div style="display:flex; gap:12px;">
+    <i class="fa-regular fa-file-lines"></i>
+    <i class="fa-regular fa-circle-question"></i>
+  </div>
+</div>
+
+<div class="secure">
+  <i class="fa-solid fa-shield-halved"></i> Secure payment
+</div>
+
+<input id="username" class="username-input" type="text" placeholder="Enter username">
+
+<div class="grid">
+  <div class="card" onclick="selectCoin(this,70)">🪙 70<div class="price">$1.12</div></div>
+  <div class="card" onclick="selectCoin(this,350)">🪙 350<div class="price">$5.60</div></div>
+  <div class="card" onclick="selectCoin(this,700)">🪙 700<div class="price">$11.20</div></div>
+  <div class="card" onclick="selectCoin(this,1400)">🪙 1400<div class="price">$22.40</div></div>
+
+  <div class="card custom-card" onclick="activateCustom(this)">
+    🪙 Custom
+    <input type="number" placeholder="Enter coins" oninput="customCoins(this.value)">
+    <div class="price" id="customPrice"></div>
+  </div>
+</div>
+
+<div class="payments">
+  <div class="pay" onclick="selectPay(this)">
+    <i class="fa-brands fa-cc-visa"></i> Visa
+  </div>
+
+  <div class="pay" onclick="selectPay(this)">
+    <i class="fa-brands fa-cc-mastercard"></i> MasterCard
+  </div>
+
+  <div class="pay" onclick="selectPay(this)">
+    <i class="fa-brands fa-paypal"></i> PayPal
+  </div>
+</div>
+
+<button onclick="payNow()">Recharge</button>
+
+</div>
+
+<!-- CONFIRM -->
+<div class="overlay" id="confirmBox">
+  <div class="popup">
+    <h3>Confirm Payment</h3>
+    <div id="confirmData"></div>
+
+    <div style="margin-top:10px;">
+      <input type="checkbox" id="agree"> I agree to Terms
+    </div>
+
+    <button onclick="confirmFinal()">Continue</button>
+    <button onclick="closeConfirm()" style="background:#333;margin-top:8px;">Cancel</button>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <p>Processing...</p>
+</div>
+
+<!-- SUCCESS -->
+<div class="success" id="success">
+  <i class="fa-solid fa-circle-check"></i>
+  <h2>Payment Successful</h2>
+  <div class="receipt" id="receiptBox"></div>
+  <button onclick="goHome()">Back to Home</button>
+</div>
+
+<script>
+let selectedCoin = 0;
+let selectedPay = "";
+
+function selectCoin(el,val){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  selectedCoin = val;
+}
+
+function activateCustom(el){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function customCoins(val){
+  selectedCoin = val;
+  document.getElementById("customPrice").innerText = "$" + (val*0.016).toFixed(2);
+}
+
+function selectPay(el){
+  document.querySelectorAll('.pay').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  selectedPay = el.innerText.trim();
+}
+
+function payNow(){
+  let username = document.getElementById("username").value;
+
+  if(!username || selectedCoin==0 || !selectedPay){
+    alert("Complete info");
+    return;
+  }
+
+  document.getElementById("confirmBox").style.display="flex";
+
+  document.getElementById("confirmData").innerHTML = `
+    User: ${username}<br>
+    Coins: ${selectedCoin}<br>
+    Payment: ${selectedPay}
+  `;
+}
+
+function closeConfirm(){
+  document.getElementById("confirmBox").style.display="none";
+}
+
+function confirmFinal(){
+  if(!document.getElementById("agree").checked){
+    alert("Accept terms");
+    return;
+  }
+
+  closeConfirm();
+
+  document.getElementById("main").style.display="none";
+  document.getElementById("loading").style.display="block";
+
+  setTimeout(()=>{
+    document.getElementById("loading").style.display="none";
+    document.getElementById("success").style.display="block";
+    generateReceipt();
+    dropCoins();
+  },4000);
+}
+
+function generateReceipt(){
+  let username = document.getElementById("username").value;
+  let hidden = username.substring(0,3)+"****";
+
+  let price = selectedCoin * 0.016;
+  let fee = price * 0.05;
+  let total = price + fee;
+
+  let invoice = "INV-"+Math.floor(Math.random()*999999);
+
+  let now = new Date();
+
+  document.getElementById("receiptBox").innerHTML = `
+    Invoice: ${invoice}<br>
+    ${now.toLocaleDateString()} - ${now.toLocaleTimeString()}<br><br>
+
+    User: ${hidden}<br>
+    Payment: ${selectedPay}<br><br>
+
+    Coins: ${selectedCoin}<br>
+    Price: $${price.toFixed(2)}<br>
+    Fee: $${fee.toFixed(2)}<br>
+
+    <b>Total: $${total.toFixed(2)}</b>
+  `;
+}
+
+function dropCoins(){
+  for(let i=0;i<25;i++){
+    let c=document.createElement("div");
+    c.className="coin";
+    c.innerText="🪙";
+    c.style.left=Math.random()*100+"vw";
+    c.style.animationDuration=(2+Math.random()*2)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
+
+function goHome(){
+  location.reload();
+}
+</script>
+
+</body>
+</html>
