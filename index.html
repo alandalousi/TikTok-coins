@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok Coins</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+}
+
+/* HEADER */
+.header {
+  background: #fff;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+}
+
+/* CONTAINER */
+.container {
+  padding: 15px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+/* COINS GRID */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.card {
+  background: #fff;
+  padding: 18px;
+  border-radius: 16px;
+  text-align: center;
+  border: 1px solid #eee;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.card.active {
+  border: 2px solid #fe2c55;
+}
+
+/* PAYMENT METHODS */
+.methods {
+  margin-top: 20px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.methods h3 {
+  margin: 0 0 10px;
+}
+
+.methods img {
+  height: 28px;
+  margin-right: 10px;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 15px;
+  background: #fe2c55;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+/* MODAL */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+  width: 85%;
+  text-align: center;
+  animation: pop 0.3s ease;
+}
+
+.check {
+  width: 60px;
+  height: 60px;
+  background: #00c853;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  margin: auto;
+}
+
+@keyframes pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/TikTok_logo.svg" width="30">
+  TikTok
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+
+  <input id="user" placeholder="Enter TikTok username">
+
+  <!-- COINS -->
+  <div class="grid" id="coins"></div>
+
+  <!-- PAYMENT METHODS -->
+  <div class="methods">
+    <h3>Payment Method</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg">
+  </div>
+
+  <button onclick="pay()">Pay Now</button>
+
+</div>
+
+<!-- SUCCESS -->
+<div id="success" style="display:none;" class="overlay">
+  <div class="modal">
+    <div class="check">✔</div>
+    <h2>Payment Successful</h2>
+    <p id="result"></p>
+    <button onclick="closeModal()">Done</button>
+  </div>
+</div>
+
+<script>
+let selected = 200;
+const coins = [30,40,50,70,150,200];
+const grid = document.getElementById("coins");
+
+coins.forEach(c=>{
+  let div = document.createElement("div");
+  div.className="card";
+  div.innerHTML = `<h3>${c}</h3><p>$${(c*0.01).toFixed(2)}</p>`;
+
+  div.onclick = ()=>{
+    selected=c;
+    document.querySelectorAll(".card").forEach(e=>e.classList.remove("active"));
+    div.classList.add("active");
+  };
+
+  if(c===200) div.classList.add("active");
+  grid.appendChild(div);
+});
+
+function pay(){
+  let user = document.getElementById("user").value || "username";
+
+  document.getElementById("result").innerText =
+    selected + " coins sent to @" + user;
+
+  document.getElementById("success").style.display="flex";
+}
+
+function closeModal(){
+  document.getElementById("success").style.display="none";
+}
+</script>
+
+</body>
+</html>
